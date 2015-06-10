@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>A Brand New nanoc Site - <%= @item[:title] %></title>
+    <title>Proehl.us - <%= @item[:title] %></title>
     <link rel="stylesheet" href="<%= @items['/stylesheet/'].path %>">
 
     <!-- you don't need to keep this, but it's cool for stats! -->
@@ -13,16 +13,23 @@
       <%= yield %>
     </div>
     <div id="sidebar">
-      <h2>Documentation</h2>
+      <h1>Proehl.us</h1>
+      <p>The webpage of the Proehl family in the United States.<br /><br /></p>
+
+      <h2>Family Tree</h2>
       <ul>
-        <li><a href="http://nanoc.ws/docs/">Documentation</a></li>
-        <li><a href="http://nanoc.ws/docs/tutorial/">Getting Started</a></li>
+        <li>Show non-Proehls: <input type="checkbox" disabled="true" /></li>
+        <li>Make tree-like: <input type="checkbox" disabled="true" /></li>
       </ul>
-      <h2>Community</h2>
+
+      <h2>Other Pages</h2>
       <ul>
-        <li><a href="http://groups.google.com/group/nanoc/">Discussion Group</a></li>
-        <li><a href="irc://chat.freenode.net/#nanoc">IRC Channel</a></li>
-        <li><a href="http://github.com/nanoc/nanoc/wiki/">Wiki</a></li>
+        <li><a href="javascript:void;">Family History</a></li>
+      </ul>
+
+      <h2>Proehl family websites</h2>
+      <ul>
+        <li><a href="https://proehl.us/joshnbev/">Josh and Bev</a></li>
       </ul>
     </div>
   </body>
