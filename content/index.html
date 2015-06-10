@@ -1,7 +1,7 @@
 ---
 title: Home
 ---
-<script src="http://d3js.org/d3.v2.js?2.9.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
 <style>
 
 .link {
@@ -11,9 +11,27 @@ title: Home
 }
 
 .node circle {
-  fill: #ccc;
+  fill: #000;
   stroke: #fff;
   stroke-width: 1.5px;
+}
+.node .circle0 {
+  fill: #ccc;
+}
+.node .circle1 {
+  fill: #00c;
+}
+.node .circle2 {
+  fill: #0c0;
+}
+.node .circle3 {
+  fill: #c00;
+}
+.node .circle4 {
+  fill: #c0c;
+}
+.node .circle5 {
+  fill: #cc0;
 }
 
 text {
@@ -52,10 +70,33 @@ var nodes = {};
 
 
 // Compute the distinct nodes from the links.
-// While we're at it we're going to pick a new color for each spouse pair.
 links.forEach(function(link) {
   link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
   link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+});
+
+// Loop again to pick a new colors for each node
+links.forEach(function(link) {
+  if(link.source["generationColor"] == null) {
+    // Get all the links to or from this source that AREN'T spousal links, and make sure we have no conflicting colors.
+    var availColors = d3.set([0,1,2,3,4,5]);
+    for(var i=0; i<links.length; i++) {
+      if(links[i].source == link.source && links[i].target.generationColor != null) {
+        // Found a link FROM the current one going outwards, and it's target has a color. We can't use that color.
+        availColors.remove(links[i].target.generationColor);
+      } else if (links[i].target == link.source && links[i].source.generationColor != null) {
+        // Found a link TO the current one, and it's source has a color, so we can't use that color.
+        availColors.remove(links[i].source.generationColor);
+      }
+    }
+
+    link.source["generationColor"] = availColors.values()[Math.floor(Math.random() * availColors.values().length)];
+  }
+
+  // Now that we know the source has a valid color, we set the target to match it's color.
+  if(link.type == "spouse") {
+    link.target["generationColor"] = link.source["generationColor"];
+  }
 });
 
 var width = 960,
@@ -90,7 +131,8 @@ var node = svg.selectAll(".node")
 
 
 node.append("circle")
-    .attr("r", 8);
+    .attr("r", 8)
+    .attr("class", (function(d) { return "circle"+d["generationColor"]; }) );
 
 node.append("text")
     .attr("x", 12)
