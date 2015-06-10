@@ -9,6 +9,16 @@ title: Home
   stroke: #666;
   stroke-width: 1.5px;
 }
+.link-parent {
+  fill: none;
+  stroke: #400;
+  stroke-width: 1.5px;
+}
+.link-spouse {
+  fill: none;
+  stroke: #000;
+  stroke-width: 4px;
+}
 
 .node circle {
   fill: #000;
@@ -119,7 +129,7 @@ var svg = d3.select("body").append("svg")
 var link = svg.selectAll(".link")
     .data(force.links())
     .enter().append("line")
-    .attr("class", "link");
+    .attr("class", computeLinkStyle);
 
 var node = svg.selectAll(".node")
     .data(force.nodes())
@@ -158,6 +168,16 @@ function computeStrength(link, idx) {
   } else {
     // Catch-all, but should never happen...
     return 0.2;
+  }
+}
+
+function computeLinkStyle(link, idx) {
+  if(link.type == "parent") {
+    return "link-parent";
+  } else if(link.type == "spouse") {
+    return "link-spouse";
+  } else {
+    return "link";
   }
 }
 
