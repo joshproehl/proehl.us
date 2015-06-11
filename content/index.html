@@ -4,6 +4,12 @@ title: Home
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
 <style>
 
+.familyTree {
+  border-style:solid;
+  border-color:#00000;
+  border-width: 1px;
+}
+
 .link {
   fill: none;
   stroke: #666;
@@ -175,7 +181,8 @@ var force = d3.layout.force()
     .on("tick", tick)
     .start();
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#main").append("svg")
+    .attr("class", "familyTree")
     .attr("width", width)
     .attr("height", height);
 
