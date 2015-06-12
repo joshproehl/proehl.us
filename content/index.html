@@ -26,6 +26,11 @@ title: Home
   stroke-width: 4px;
 }
 
+.node.fixed circle {
+  stroke-width: 3px !important;
+  stroke: #000 !important;
+}
+
 .node circle {
   fill: #000;
   stroke: #fff;
@@ -171,20 +176,37 @@ links.forEach(function(link) {
 var width = 960,
     height = 500;
 
+var svgContainer = d3.select("#main").append("svg")
+    .attr("class", "familyTree")
+    .attr("width", width)
+    .attr("height", height);
+
+var svgOuter = svgContainer
+  .append('svg:g')
+    .call(d3.behavior.zoom().on("zoom", rescale))
+    .on("dblclick.zoom", null)
+
+var svg = svgOuter.append('svg:g')
+
+svg.append('svg:rect')
+    .attr('width', width*10)
+    .attr('height', height*10)
+    .attr('x', -(width*5))
+    .attr('y', -(height*5))
+    .attr('fill', 'white');
+
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
     .size([width, height])
     .linkDistance(computeDistance)
     .linkStrength(computeStrength)
-    .charge(-600)
+    .charge(-500)
     .on("tick", tick)
     .start();
 
-var svg = d3.select("#main").append("svg")
-    .attr("class", "familyTree")
-    .attr("width", width)
-    .attr("height", height);
+var drag = force.drag()
+    .on("dragstart", dragstart);
 
 var link = svg.selectAll(".link")
     .data(force.links())
@@ -195,9 +217,10 @@ var node = svg.selectAll(".node")
     .data(force.nodes())
     .enter().append("g")
     .attr("class", "node")
-    .on("mouseover", mouseover)
-    .on("mouseout", mouseout)
-    .call(force.drag);
+    .on("mouseover", node_mouseover)
+    .on("mouseout", node_mouseout)
+    .on("dblclick", dblclick)
+    .call(drag);
 
 
 node.append("circle")
@@ -253,16 +276,35 @@ function tick() {
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 }
 
-function mouseover() {
+function node_mouseover() {
   d3.select(this).select("circle").transition()
       .duration(750)
       .attr("r", 16);
 }
 
-function mouseout() {
+function node_mouseout() {
   d3.select(this).select("circle").transition()
       .duration(750)
       .attr("r", 8);
+  svgOuter.call(d3.behavior.zoom().on("zoom", rescale)).on("dblclick.zoom", null);
+}
+
+function rescale() {
+  trans=d3.event.translate;
+  scale=d3.event.scale;
+
+  svg.attr("transform",
+      "translate(" + trans + ")"
+      + " scale(" + scale + ")");
+}
+
+function dblclick(d) {
+  d3.select(this).classed("fixed", d.fixed = false);
+}
+
+function dragstart(d) {
+  svgOuter.call(d3.behavior.zoom().on("zoom", null));
+  d3.select(this).classed("fixed", d.fixed = true);
 }
 
 </script>
