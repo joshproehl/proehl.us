@@ -82,5 +82,5 @@ watcher:
 deploy:
   production:
     kind: rsync
-    dst: "proehl.us:~/proehl_us"
-    #options: [ '-gpPrtvz', '--delete-after' ] # delete existing files on server
+    dst: "daedalusdreams.com:~/proehl.us"
+    options: [ '-gpPrtvz', '--delete-after' ] # delete existing files on server
